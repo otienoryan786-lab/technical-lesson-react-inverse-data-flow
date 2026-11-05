@@ -1,24 +1,36 @@
-import React, { useState } from "react";
+import { useState } from 'react'
+import './App.css'
+import EmployeeForm from './components/EmployeeForm'
+import employeeData from "./data/employees";
+import Header from './components/Header';
+import EmployeeList from './components/EmployeeList';
 
-function Employee({employee}) {
-  const [edit,setEdit] = useState(false)
-  const [roleEdit,setroleEdit] = useState(employee.role)
-
+function App() {
+  const [employees, setEmployees] = useState(employeeData)
+  function handleDelete(employeeToDelete){
+    const newArray = employees.filter(employee =>{
+      if(employee.id==employeeToDelete.id){
+        return false
+      }
+      return true
+    })
+    setEmployees(newArray)
+  }
+  function handleEdit(employeeToEdit){
+    const newArray = employees.map(employee=>{
+      if(employee.id==employeeToEdit.id){
+        return employeeToEdit
+      }
+      return employee
+    })
+    setEmployees(newArray)
+  }
   return (
-    <tr>
-        <td>{employee.firstName}</td>
-        <td>{employee.lastName}</td>
-        <td onClick={()=>setEdit(true)}>{
-              edit ? 
-              <form>
-                <input onChange={(e) => setroleEdit(e.target.value)} value={roleEdit}/>
-              </form>
-              : employee.role}</td>
-        <td>
-          <button> X </button>
-        </td>
-    </tr>
-  );
+    <div>
+      <Header/>
+      <EmployeeForm employees={employees} setEmployees={setEmployees}/>
+      <EmployeeList employees={employees} handleDelete={handleDelete} handleEdit={handleEdit}/>
+    </div>
+  )
 }
-
-export default Employee;
+export default App
